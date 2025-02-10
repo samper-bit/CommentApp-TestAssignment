@@ -32,10 +32,10 @@ public class Comment : Aggregate<CommentId>
             File = file,
         };
 
-        //comment.AddDomainEvent(new CommentCreatedEvent(id, userName, email, homePage, text, parentCommentId, file?.Id));
+        comment.AddDomainEvent(new CommentCreatedEvent(id, userName, email, homePage, text, parentCommentId, file?.Id));
 
-        //if (file != null)
-        //    comment.AddDomainEvent(new FileAddedToCommentEvent(id, file.Id, file.FilePath));
+        if (file != null)
+            comment.AddDomainEvent(new FileAddedToCommentEvent(id, file.Id, file.FilePath));
 
         return comment;
     }
@@ -50,14 +50,14 @@ public class Comment : Aggregate<CommentId>
             File = file;
         }
 
-        //AddDomainEvent(new CommentUpdatedEvent(Id, Text, file?.Id));
+        AddDomainEvent(new CommentUpdatedEvent(Id, Text, file?.Id));
     }
 
     public void AddChildComment(Comment childComment)
     {
         childComment.ParentCommentId = Id;
         _childComments.Add(childComment);
-        //AddDomainEvent(new ChildCommentAddedEvent(Id, childComment.Id));
+        AddDomainEvent(new ChildCommentAddedEvent(Id, childComment.Id));
     }
 
     public void RemoveChildComment(CommentId childCommentId)
@@ -67,14 +67,14 @@ public class Comment : Aggregate<CommentId>
         if (childComment != null)
         {
             _childComments.Remove(childComment);
-            //AddDomainEvent(new ChildCommentRemovedEvent(Id, childCommentId));
+            AddDomainEvent(new ChildCommentRemovedEvent(Id, childCommentId));
         }
     }
 
     public void AddFile(File file)
     {
         File = file;
-        //AddDomainEvent(new FileAddedToCommentEvent(Id, file.Id, file.FilePath));
+        AddDomainEvent(new FileAddedToCommentEvent(Id, file.Id, file.FilePath));
     }
 
     public void UpdateFile(File file)
