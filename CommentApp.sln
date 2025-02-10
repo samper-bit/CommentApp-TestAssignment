@@ -3,8 +3,49 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35514.174 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D9ABDCF7-53F4-4A9D-86E4-F39F552FE839}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CommentApp.Backend", "CommentApp.Backend", "{A3763B01-C75E-4D2C-ABA7-0BF754AEB5DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommentApp.API", "src\CommentApp.Backend\CommentApp.API\CommentApp.API.csproj", "{B2511A17-33D4-4799-9270-491279490339}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommentApp.Application", "src\CommentApp.Backend\CommentApp.Application\CommentApp.Application.csproj", "{8A55FE4A-F33A-4384-8DE6-BF769B009466}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommentApp.Infrastructure", "src\CommentApp.Backend\CommentApp.Infrastructure\CommentApp.Infrastructure.csproj", "{A7ADEFDD-F7C8-4589-A7C4-441E9D28F37D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommentApp.Domain", "src\CommentApp.Backend\CommentApp.Domain\CommentApp.Domain.csproj", "{24DD97E9-24AA-4E83-8B12-6A9F668ABF6B}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B2511A17-33D4-4799-9270-491279490339}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2511A17-33D4-4799-9270-491279490339}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2511A17-33D4-4799-9270-491279490339}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2511A17-33D4-4799-9270-491279490339}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A55FE4A-F33A-4384-8DE6-BF769B009466}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A55FE4A-F33A-4384-8DE6-BF769B009466}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A55FE4A-F33A-4384-8DE6-BF769B009466}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A55FE4A-F33A-4384-8DE6-BF769B009466}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7ADEFDD-F7C8-4589-A7C4-441E9D28F37D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7ADEFDD-F7C8-4589-A7C4-441E9D28F37D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7ADEFDD-F7C8-4589-A7C4-441E9D28F37D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7ADEFDD-F7C8-4589-A7C4-441E9D28F37D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24DD97E9-24AA-4E83-8B12-6A9F668ABF6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24DD97E9-24AA-4E83-8B12-6A9F668ABF6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24DD97E9-24AA-4E83-8B12-6A9F668ABF6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24DD97E9-24AA-4E83-8B12-6A9F668ABF6B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A3763B01-C75E-4D2C-ABA7-0BF754AEB5DD} = {D9ABDCF7-53F4-4A9D-86E4-F39F552FE839}
+		{B2511A17-33D4-4799-9270-491279490339} = {A3763B01-C75E-4D2C-ABA7-0BF754AEB5DD}
+		{8A55FE4A-F33A-4384-8DE6-BF769B009466} = {A3763B01-C75E-4D2C-ABA7-0BF754AEB5DD}
+		{A7ADEFDD-F7C8-4589-A7C4-441E9D28F37D} = {A3763B01-C75E-4D2C-ABA7-0BF754AEB5DD}
+		{24DD97E9-24AA-4E83-8B12-6A9F668ABF6B} = {A3763B01-C75E-4D2C-ABA7-0BF754AEB5DD}
 	EndGlobalSection
 EndGlobal
