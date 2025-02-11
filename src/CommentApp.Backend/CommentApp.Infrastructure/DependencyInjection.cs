@@ -1,6 +1,5 @@
 ﻿using CommentApp.Infrastructure.Data;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CommentApp.Infrastructure;
 public static class DependencyInjection

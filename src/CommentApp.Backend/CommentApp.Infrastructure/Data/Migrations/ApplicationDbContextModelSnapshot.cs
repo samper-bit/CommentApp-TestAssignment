@@ -58,7 +58,7 @@ namespace CommentApp.Infrastructure.Migrations
 
                     b.HasIndex("ParentCommentId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("CommentApp.Domain.Models.File", b =>
@@ -89,7 +89,7 @@ namespace CommentApp.Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[CommentId] IS NOT NULL");
 
-                    b.ToTable("Files");
+                    b.ToTable("Files", (string)null);
                 });
 
             modelBuilder.Entity("CommentApp.Domain.Models.Comment", b =>
