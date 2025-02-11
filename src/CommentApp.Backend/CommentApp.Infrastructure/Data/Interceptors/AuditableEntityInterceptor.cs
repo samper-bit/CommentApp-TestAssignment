@@ -1,6 +1,4 @@
-﻿using CommentApp.Domain.Abstractions;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Diagnostics;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CommentApp.Infrastructure.Data.Interceptors;
 
