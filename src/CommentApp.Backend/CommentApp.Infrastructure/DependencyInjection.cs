@@ -1,4 +1,5 @@
 ﻿using CommentApp.Infrastructure.Data;
+using CommentApp.Infrastructure.Data.Interceptors;
 using Microsoft.Extensions.Configuration;
 
 namespace CommentApp.Infrastructure;
@@ -10,7 +11,10 @@ public static class DependencyInjection
         var connectionString = configuration.GetConnectionString("Database");
 
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(connectionString));
+        {
+            options.AddInterceptors(new AuditableEntityInterceptor());
+            options.UseSqlServer(connectionString);
+        });
 
         return services;
     }
