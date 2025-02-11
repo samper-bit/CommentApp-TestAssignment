@@ -10,8 +10,8 @@ public class FileConfiguration : IEntityTypeConfiguration<File>
             dbId => FileId.Of(dbId));
 
         builder.Property(c => c.CommentId).HasConversion(
-            commentId => commentId.Value,
-            dbId => CommentId.Of(dbId));
+            commentId => commentId == null ? (Guid?)null : commentId.Value,
+            dbId => dbId == null ? null : CommentId.Of(dbId.Value));
 
         builder.Property(f => f.FilePath)
             .IsRequired()
