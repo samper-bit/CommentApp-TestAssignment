@@ -1,6 +1,4 @@
-﻿using System.Threading.Channels;
-
-namespace CommentApp.Domain.Models;
+﻿namespace CommentApp.Domain.Models;
 public class Comment : Aggregate<CommentId>
 {
     public string UserName { get; private set; } = default!;
@@ -77,8 +75,8 @@ public class Comment : Aggregate<CommentId>
         AddDomainEvent(new FileAddedToCommentEvent(Id, file.Id, file.FilePath));
     }
 
-    public void UpdateFile(File file)
+    public void UpdateFile(string fileUploadName)
     {
-        File?.Update(file.FilePath, file.FileType);
+        File?.Update(fileUploadName);
     }
 }
