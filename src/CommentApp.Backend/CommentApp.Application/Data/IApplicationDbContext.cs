@@ -1,6 +1,5 @@
-﻿using CommentApp.Domain.Models;
-using Microsoft.EntityFrameworkCore;
-using File = CommentApp.Domain.Models.File;
+﻿using Microsoft.EntityFrameworkCore;
+
 namespace CommentApp.Application.Data;
 public interface IApplicationDbContext
 {
