@@ -1,6 +1,4 @@
-﻿using Carter;
-
-namespace CommentApp.API;
+﻿namespace CommentApp.API;
 
 public static class DependencyInjection
 {
