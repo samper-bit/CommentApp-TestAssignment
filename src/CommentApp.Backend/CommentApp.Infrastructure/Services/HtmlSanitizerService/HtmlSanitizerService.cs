@@ -1,5 +1,4 @@
-﻿using CommentApp.Application.Services.HtmlSanitizerService;
-using Ganss.Xss;
+﻿using Ganss.Xss;
 
 namespace CommentApp.Infrastructure.Services.HtmlSanitizerService;
 public class HtmlSanitizerService : IHtmlSanitizerService

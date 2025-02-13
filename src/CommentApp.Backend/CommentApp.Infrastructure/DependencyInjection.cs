@@ -1,6 +1,5 @@
-﻿using CommentApp.Application.Services.HtmlSanitizerService;
-using CommentApp.Infrastructure.Data;
-using CommentApp.Infrastructure.Data.Interceptors;
+﻿using CommentApp.Infrastructure.Data.Interceptors;
+using CommentApp.Infrastructure.Services.CaptchaService;
 using CommentApp.Infrastructure.Services.HtmlSanitizerService;
 using Microsoft.Extensions.Configuration;
 
@@ -20,6 +19,7 @@ public static class DependencyInjection
 
         services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
 
+        services.AddSingleton<CaptchaService>();
         services.AddSingleton<IHtmlSanitizerService, HtmlSanitizerService>();
 
         return services;
