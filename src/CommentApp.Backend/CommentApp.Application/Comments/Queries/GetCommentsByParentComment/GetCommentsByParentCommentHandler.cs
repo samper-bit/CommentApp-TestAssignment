@@ -1,0 +1,38 @@
+﻿namespace CommentApp.Application.Comments.Queries.GetCommentsByParentComment;
+
+public class GetCommentsByParentCommentHandler(IApplicationDbContext dbContext)
+    : IQueryHandler<GetCommentsByParentCommentQuery, GetCommentsByParentCommentResult>
+{
+    public async Task<GetCommentsByParentCommentResult> Handle(GetCommentsByParentCommentQuery query,
+        CancellationToken cancellationToken)
+    {
+        var pageIndex = query.PaginationRequest.PageIndex;
+        var pageSize = query.PaginationRequest.PageSize;
+        var sortField = query.PaginationRequest.SortField;
+        var ascending = query.PaginationRequest.Ascending;
+        //var filter = query.PaginationRequest.Filter;
+
+        var comments = dbContext.Comments
+            .AsNoTracking()
+            .Include(c => c.File)
+            .Where(c => c.ParentCommentId == CommentId.Of(query.ParentCommentId))
+            .Skip(pageSize * pageIndex)
+            .Take(pageSize)
+            .AsQueryable();
+
+        var totalCount = await comments.LongCountAsync(cancellationToken);
+
+        comments = ascending
+            ? comments.OrderBy(c => EF.Property<object>(c, sortField))
+            : comments.OrderByDescending(c => EF.Property<object>(c, sortField));
+
+        return new GetCommentsByParentCommentResult(
+            new PaginatedResult<CommentDto>(
+                pageIndex,
+                pageSize,
+                totalCount,
+                sortField,
+                ascending,
+                comments.AsEnumerable().ToCommentDtoList()));
+    }
+}
