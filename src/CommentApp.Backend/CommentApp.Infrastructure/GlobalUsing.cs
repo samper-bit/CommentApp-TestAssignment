@@ -10,4 +10,6 @@ global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Microsoft.EntityFrameworkCore.Diagnostics;
 global using Microsoft.Extensions.DependencyInjection;
 global using System.Reflection;
+global using SixLabors.ImageSharp;
+global using SixLabors.ImageSharp.Processing;
 global using File = CommentApp.Domain.Models.File;
