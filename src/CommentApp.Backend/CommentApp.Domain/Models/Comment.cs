@@ -79,4 +79,9 @@ public class Comment : Aggregate<CommentId>
     {
         File?.Update(fileUploadName);
     }
+
+    public void RemoveFile()
+    {
+        File = null;
+    }
 }
