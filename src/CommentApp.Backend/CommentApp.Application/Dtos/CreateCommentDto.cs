@@ -5,5 +5,4 @@ public record CreateCommentDto(
     string Email,
     string? HomePage,
     string Text,
-    Guid? ParentCommentId,
-    CreateFileDto? File);
+    Guid? ParentCommentId);

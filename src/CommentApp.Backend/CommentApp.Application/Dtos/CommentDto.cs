@@ -7,4 +7,6 @@ public record CommentDto(
     string Text,
     Guid? ParentCommentId,
     List<CommentDto> ChildComments,
-    FileDto? File);
+    FileDto? File,
+    DateTime? CreatedAt,
+    DateTime? LastModified);
