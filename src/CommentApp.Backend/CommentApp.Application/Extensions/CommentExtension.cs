@@ -18,7 +18,9 @@ public static class CommentExtension
                 Text: comment.Text,
                 ParentCommentId: comment.ParentCommentId?.Value,
                 ChildComments: new List<CommentDto>(),
-                File: comment.File != null ? new FileDto(comment.File.FilePath, comment.File.FileType) : null
+                File: comment.File != null ? new FileDto(comment.File.FilePath, comment.File.FileType) : null,
+                CreatedAt: comment.CreatedAt,
+                LastModified: comment.LastModified
             );
 
             commentMap[comment.Id.Value] = dto;

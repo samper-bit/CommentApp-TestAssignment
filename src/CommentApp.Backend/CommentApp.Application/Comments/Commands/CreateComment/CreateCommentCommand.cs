@@ -1,5 +1,6 @@
 ﻿namespace CommentApp.Application.Comments.Commands.CreateComment;
-public record CreateCommentCommand(CreateCommentDto Comment) : ICommand<CreateCommentResult>;
+
+public record CreateCommentCommand(CreateCommentDto Comment, IFormFile? File) : ICommand<CreateCommentResult>;
 
 public record CreateCommentResult(Guid Id);
 public class CreateCommentCommandValidator : AbstractValidator<CreateCommentCommand>

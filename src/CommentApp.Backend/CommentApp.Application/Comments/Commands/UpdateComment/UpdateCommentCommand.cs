@@ -1,6 +1,6 @@
 ﻿namespace CommentApp.Application.Comments.Commands.UpdateComment;
 
-public record UpdateCommentCommand(UpdateCommentDto Comment) : ICommand<UpdateCommentResult>;
+public record UpdateCommentCommand(UpdateCommentDto Comment, IFormFile? File) : ICommand<UpdateCommentResult>;
 
 public record UpdateCommentResult(bool IsSuccess);
 
