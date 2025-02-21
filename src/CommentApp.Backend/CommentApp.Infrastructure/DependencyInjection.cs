@@ -1,5 +1,4 @@
-﻿using CommentApp.Application.Services.FileService;
-using CommentApp.Infrastructure.Data.Interceptors;
+﻿using CommentApp.Infrastructure.Data.Interceptors;
 using CommentApp.Infrastructure.Services.CaptchaService;
 using CommentApp.Infrastructure.Services.FileService;
 using CommentApp.Infrastructure.Services.HtmlSanitizerService;

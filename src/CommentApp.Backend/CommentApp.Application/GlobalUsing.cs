@@ -14,4 +14,5 @@ global using CommentApp.Application.Services.HtmlSanitizerService;
 global using CommentApp.Domain.Models;
 global using CommentApp.Domain.Events;
 global using CommentApp.Domain.ValueObjects;
+global using CommentApp.Shared.Exceptions;
 global using File = CommentApp.Domain.Models.File;

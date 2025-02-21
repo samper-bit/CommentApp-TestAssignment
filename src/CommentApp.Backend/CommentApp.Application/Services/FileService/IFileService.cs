@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace CommentApp.Application.Services.FileService;
+﻿namespace CommentApp.Application.Services.FileService;
 public interface IFileService
 {
     bool ValidateFileAsync(IFormFile file);

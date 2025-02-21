@@ -1,5 +1,4 @@
-﻿using CommentApp.Application.Services.FileService;
-using CommentApp.Infrastructure.Exceptions;
+﻿using CommentApp.Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Http;
 
 namespace CommentApp.Infrastructure.Services.FileService;

@@ -5,6 +5,8 @@ global using CommentApp.Infrastructure.Data;
 global using CommentApp.Application.Data;
 global using CommentApp.Application.Services.HtmlSanitizerService;
 global using CommentApp.Application.Services.CaptchaService;
+global using CommentApp.Application.Services.FileService;
+global using CommentApp.Shared.Exceptions;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Microsoft.EntityFrameworkCore.Diagnostics;

@@ -1,5 +1,4 @@
 ﻿using CommentApp.Application.Comments.Commands.UpdateComment;
-using Microsoft.AspNetCore.Mvc;
 
 namespace CommentApp.API.Endpoints;
 
