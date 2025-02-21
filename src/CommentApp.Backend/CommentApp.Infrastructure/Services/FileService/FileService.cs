@@ -10,7 +10,7 @@ public class FileService : IFileService
     private const int MaxImageHeight = 240;
     private const int MaxTextFileSize = 100 * 1024;
 
-    public bool ValidateFileAsync(IFormFile file)
+    public bool ValidateFile(IFormFile file)
     {
         var fileType = GetFileType(file);
         if (String.IsNullOrWhiteSpace(fileType))
