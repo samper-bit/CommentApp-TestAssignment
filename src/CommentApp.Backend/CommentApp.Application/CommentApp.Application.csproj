@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CommentApp.Domain\CommentApp.Domain.csproj" />
+    <ProjectReference Include="..\CommentApp.Shared\CommentApp.Shared.csproj" />
   </ItemGroup>
 
 </Project>

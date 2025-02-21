@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35514.174 d17.12
+VisualStudioVersion = 17.12.35514.174
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D9ABDCF7-53F4-4A9D-86E4-F39F552FE839}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommentApp.Infrastructure", "src\CommentApp.Backend\CommentApp.Infrastructure\CommentApp.Infrastructure.csproj", "{A7ADEFDD-F7C8-4589-A7C4-441E9D28F37D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommentApp.Domain", "src\CommentApp.Backend\CommentApp.Domain\CommentApp.Domain.csproj", "{24DD97E9-24AA-4E83-8B12-6A9F668ABF6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommentApp.Shared", "src\CommentApp.Backend\CommentApp.Shared\CommentApp.Shared.csproj", "{0C3B6D2A-D629-4023-9831-604CFD2506FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +39,10 @@ Global
 		{24DD97E9-24AA-4E83-8B12-6A9F668ABF6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24DD97E9-24AA-4E83-8B12-6A9F668ABF6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24DD97E9-24AA-4E83-8B12-6A9F668ABF6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C3B6D2A-D629-4023-9831-604CFD2506FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C3B6D2A-D629-4023-9831-604CFD2506FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C3B6D2A-D629-4023-9831-604CFD2506FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C3B6D2A-D629-4023-9831-604CFD2506FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,5 +53,6 @@ Global
 		{8A55FE4A-F33A-4384-8DE6-BF769B009466} = {A3763B01-C75E-4D2C-ABA7-0BF754AEB5DD}
 		{A7ADEFDD-F7C8-4589-A7C4-441E9D28F37D} = {A3763B01-C75E-4D2C-ABA7-0BF754AEB5DD}
 		{24DD97E9-24AA-4E83-8B12-6A9F668ABF6B} = {A3763B01-C75E-4D2C-ABA7-0BF754AEB5DD}
+		{0C3B6D2A-D629-4023-9831-604CFD2506FB} = {A3763B01-C75E-4D2C-ABA7-0BF754AEB5DD}
 	EndGlobalSection
 EndGlobal
