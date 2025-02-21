@@ -30,7 +30,10 @@ public class Comment : Aggregate<CommentId>
             File = file,
         };
 
-        comment.AddDomainEvent(new CommentCreatedEvent(id, userName, email, homePage, text, parentCommentId, file?.Id));
+        if (parentCommentId == null)
+            comment.AddDomainEvent(new CommentCreatedEvent(id, userName, email, homePage, text, parentCommentId, file?.Id));
+        else
+            comment.AddDomainEvent(new ChildCommentAddedEvent(parentCommentId, id));
 
         if (file != null)
             comment.AddDomainEvent(new FileAddedToCommentEvent(id, file.Id, file.FilePath));
@@ -48,7 +51,7 @@ public class Comment : Aggregate<CommentId>
             File = file;
         }
 
-        AddDomainEvent(new CommentUpdatedEvent(Id, Text, file?.Id));
+        AddDomainEvent(new CommentUpdatedEvent(Id, Text, file));
     }
 
     public void AddChildComment(Comment childComment)
