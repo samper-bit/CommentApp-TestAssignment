@@ -13,16 +13,18 @@ public class GetRootCommentsHandler(IApplicationDbContext dbContext)
         var comments = dbContext.Comments
             .AsNoTracking()
             .Include(c => c.File)
-            .Where(c => c.ParentCommentId == null)
+            .Where(c => c.ParentCommentId == null);
+
+        comments = ascending
+            ? comments.OrderBy(c => EF.Property<object>(c, sortField))
+            : comments.OrderByDescending(c => EF.Property<object>(c, sortField));
+
+        comments = comments
             .Skip(pageSize * pageIndex)
             .Take(pageSize)
             .AsQueryable();
 
         var totalCount = await comments.LongCountAsync(cancellationToken);
-
-        comments = ascending
-            ? comments.OrderBy(c => EF.Property<object>(c, sortField))
-            : comments.OrderByDescending(c => EF.Property<object>(c, sortField));
 
         return new GetRootCommentsResult(
             new PaginatedResult<CommentDto>(

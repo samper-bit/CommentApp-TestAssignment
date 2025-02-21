@@ -10,21 +10,22 @@ public class GetCommentsByParentCommentHandler(IApplicationDbContext dbContext)
         var pageSize = query.PaginationRequest.PageSize;
         var sortField = query.PaginationRequest.SortField;
         var ascending = query.PaginationRequest.Ascending;
-        //var filter = query.PaginationRequest.Filter;
 
         var comments = dbContext.Comments
             .AsNoTracking()
             .Include(c => c.File)
-            .Where(c => c.ParentCommentId == CommentId.Of(query.ParentCommentId))
-            .Skip(pageSize * pageIndex)
-            .Take(pageSize)
-            .AsQueryable();
+            .Where(c => c.ParentCommentId == CommentId.Of(query.ParentCommentId));
 
         var totalCount = await comments.LongCountAsync(cancellationToken);
 
         comments = ascending
             ? comments.OrderBy(c => EF.Property<object>(c, sortField))
             : comments.OrderByDescending(c => EF.Property<object>(c, sortField));
+
+        comments = comments
+            .Skip(pageSize * pageIndex)
+            .Take(pageSize)
+            .AsQueryable();
 
         return new GetCommentsByParentCommentResult(
             new PaginatedResult<CommentDto>(
