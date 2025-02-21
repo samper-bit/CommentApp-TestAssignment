@@ -18,7 +18,7 @@ public class UpdateCommentHandler
             throw new TextIsInvalidException("Invalid HTML tags detected!");
 
         if (command.File != null)
-            fileService.ValidateFileAsync(command.File);
+            fileService.ValidateFile(command.File);
 
         var commentId = CommentId.Of(command.Comment.Id);
         var comment =

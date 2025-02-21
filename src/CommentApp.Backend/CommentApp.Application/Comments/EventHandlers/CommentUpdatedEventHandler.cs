@@ -1,10 +1,14 @@
 ﻿namespace CommentApp.Application.Comments.EventHandlers;
-public class CommentUpdatedEventHandler(ILogger<CommentUpdatedEventHandler> logger)
+
+public class CommentUpdatedEventHandler(
+    ILogger<CommentCreatedEventHandler> logger,
+    IHubContext<CommentHub> hubContext)
     : INotificationHandler<CommentUpdatedEvent>
 {
-    public Task Handle(CommentUpdatedEvent notification, CancellationToken cancellationToken)
+    public async Task Handle(CommentUpdatedEvent notification, CancellationToken cancellationToken)
     {
         logger.LogInformation("Domain Event handled: {DomainEvent}", notification.GetType().Name);
-        return Task.CompletedTask;
+
+        await hubContext.Clients.All.SendAsync("ReceiveEditedComment", notification, cancellationToken);
     }
 }

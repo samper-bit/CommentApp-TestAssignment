@@ -18,7 +18,7 @@ public class CreateCommentHandler
             throw new TextIsInvalidException("Invalid HTML tags detected!");
 
         if (command.File != null)
-            fileService.ValidateFileAsync(command.File);
+            fileService.ValidateFile(command.File);
 
         var comment = CreateNewComment(command.Comment, command.File);
         dbContext.Comments.Add(comment);
