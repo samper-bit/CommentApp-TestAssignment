@@ -17,43 +17,41 @@ public class CreateCommentHandler
         if (sanitizedValues.Any(kv => kv.Value != command.Comment.GetType().GetProperty(kv.Key)!.GetValue(command.Comment)?.ToString()))
             throw new TextIsInvalidException("Invalid HTML tags detected!");
 
-        if (command.File != null)
-            fileService.ValidateFile(command.File);
-
-        var comment = CreateNewComment(command.Comment, command.File);
-        dbContext.Comments.Add(comment);
+        var comment = await CreateNewComment(command.Comment, command.File);
+        await dbContext.Comments.AddAsync(comment, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
-
-        if (command.File != null)
-            await fileService.SaveFileAsync(command.File, comment.Id.Value.ToString());
 
         return new CreateCommentResult(comment.Id.Value);
     }
 
-    private Comment CreateNewComment(CreateCommentDto commentDto, IFormFile? file)
+    private async Task<Comment> CreateNewComment(CreateCommentDto commentDto, IFormFile? file)
     {
         var parentCommentId = commentDto.ParentCommentId.HasValue
             ? CommentId.Of(commentDto.ParentCommentId.Value)
             : null;
 
+        var newCommentId = CommentId.Of(Guid.NewGuid());
+
+        File? fileDomain = null;
+
+        if (file != null)
+        {
+            fileService.ValidateFile(file);
+            fileDomain = File.Create(
+                id: FileId.Of(Guid.NewGuid()),
+                commentId: newCommentId,
+                fileExtension: Path.GetExtension(file.FileName));
+            await fileService.SaveFileAsync(file, newCommentId.Value.ToString());
+        }
+
         var newComment = Comment.Create(
-            id: CommentId.Of(Guid.NewGuid()),
+            id: newCommentId,
             userName: commentDto.UserName,
             email: commentDto.Email,
             homePage: commentDto.HomePage,
             text: commentDto.Text,
-            parentCommentId: parentCommentId,
-            file: null);
-
-        if (file != null)
-        {
-            var fileDomain = File.Create(
-                id: FileId.Of(Guid.NewGuid()),
-                commentId: newComment.Id,
-                fileExtension: Path.GetExtension(file.FileName));
-
-            newComment.AddFile(fileDomain);
-        }
+        parentCommentId: parentCommentId,
+        file: fileDomain);
 
         return newComment;
     }

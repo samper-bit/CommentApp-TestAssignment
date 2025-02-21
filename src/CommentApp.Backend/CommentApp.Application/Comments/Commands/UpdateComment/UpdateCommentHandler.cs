@@ -17,9 +17,6 @@ public class UpdateCommentHandler
         if (sanitizedRequest.Comment.Text != command.Comment.Text)
             throw new TextIsInvalidException("Invalid HTML tags detected!");
 
-        if (command.File != null)
-            fileService.ValidateFile(command.File);
-
         var commentId = CommentId.Of(command.Comment.Id);
         var comment =
             await dbContext.Comments
@@ -30,51 +27,50 @@ public class UpdateCommentHandler
         if (comment == null)
             throw new CommentNotFoundException(command.Comment.Id);
 
+        await UpdateCommentWithNewValues(comment, command.Comment, command.File);
+
+        dbContext.Comments.Update(comment);
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        return new UpdateCommentResult(true);
+    }
+
+    private async Task UpdateCommentWithNewValues(Comment comment, UpdateCommentDto commentDto, IFormFile? file)
+    {
         if (comment.File?.FilePath != null)
         {
             fileService.DeleteFile(comment.Id.Value.ToString());
 
-            if (command.File == null)
+            if (file == null)
             {
                 dbContext.Files.Remove(comment.File);
                 comment.RemoveFile();
             }
         }
 
-        UpdateCommentWithNewValues(comment, command.Comment, command.File);
-
-        dbContext.Comments.Update(comment);
-        await dbContext.SaveChangesAsync(cancellationToken);
-
-        if (command.File != null)
-            await fileService.SaveFileAsync(command.File, comment.Id.Value.ToString());
-
-        return new UpdateCommentResult(true);
-    }
-
-    private void UpdateCommentWithNewValues(Comment comment, UpdateCommentDto commentDto, IFormFile? file)
-    {
-        comment.Update(
-            text: commentDto.Text,
-            file: comment.File);
+        File? fileDomain = null;
 
         if (file != null)
         {
+            fileService.ValidateFile(file);
+
+            var fileId = comment.File != null ? comment.File.Id : FileId.Of(Guid.NewGuid());
+
+            fileDomain = File.Create(
+                id: fileId,
+                commentId: comment.Id,
+                fileExtension: Path.GetExtension(file.FileName));
+
             if (comment.File == null)
-            {
-                var fileId = comment.File != null ? comment.File.Id : FileId.Of(Guid.NewGuid());
-
-                var fileDomain = File.Create(
-                    id: fileId,
-                    commentId: comment.Id,
-                    fileExtension: Path.GetExtension(file.FileName));
-
-                comment.AddFile(fileDomain);
-
-                dbContext.Files.Add(fileDomain);
-            }
+                await dbContext.Files.AddAsync(fileDomain);
             else
-                comment.UpdateFile(Path.GetExtension(file.FileName));
+                dbContext.Files.Update(fileDomain);
+
+            await fileService.SaveFileAsync(file, comment.Id.Value.ToString());
         }
+
+        comment.Update(
+            text: commentDto.Text,
+            file: fileDomain);
     }
 }
