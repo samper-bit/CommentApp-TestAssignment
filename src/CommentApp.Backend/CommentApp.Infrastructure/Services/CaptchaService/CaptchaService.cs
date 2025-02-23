@@ -45,8 +45,20 @@ public class CaptchaService : ICaptchaService
         int width = 200, height = 80;
         using var image = new Image<Rgba32>(width, height);
 
+        var port = Environment.GetEnvironmentVariable("ASPNETCORE_URLS")?
+            .Split(';')
+            .Select(url => new Uri(url).Port)
+            .FirstOrDefault() ?? 5050;
+
+        string fontName = port switch
+        {
+            5050 => "Arial",
+            6060 => "Liberation Serif",
+            _ => "Arial"
+        };
+
         var fontFamilies = SystemFonts.Collection.Families.ToList();
-        var fontFamily = fontFamilies.FirstOrDefault(f => f.Name == "Arial");
+        var fontFamily = fontFamilies.FirstOrDefault(f => f.Name == fontName);
         var font = new Font(fontFamily, 36, FontStyle.Bold);
 
         image.Mutate(ctx =>
