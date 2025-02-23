@@ -14,6 +14,7 @@ global using CommentApp.Application.Extensions;
 global using CommentApp.Application.Services.FileService;
 global using CommentApp.Application.Services.HtmlSanitizerService;
 global using CommentApp.Application.Services.CacheService;
+global using CommentApp.Application.Services.RabbitMqService;
 global using CommentApp.Application.SignalR;
 global using CommentApp.Domain.Models;
 global using CommentApp.Domain.Events;

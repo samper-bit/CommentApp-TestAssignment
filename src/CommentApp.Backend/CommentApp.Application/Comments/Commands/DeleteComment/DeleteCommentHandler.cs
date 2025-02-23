@@ -3,7 +3,8 @@
 public class DeleteCommentHandler(
     IApplicationDbContext dbContext,
     IFileService fileService,
-    ICacheService cacheService)
+    ICacheService cacheService,
+    IRabbitMqService rabbitMqService)
     : ICommandHandler<DeleteCommentCommand, DeleteCommentResult>
 {
     public async Task<DeleteCommentResult> Handle(DeleteCommentCommand command, CancellationToken cancellationToken)
@@ -20,6 +21,14 @@ public class DeleteCommentHandler(
 
         var cacheKey = comment.ParentCommentId == null ? "root-comments" : $"comments:{comment.ParentCommentId}";
         await cacheService.RemoveAsync(cacheKey);
+
+        await rabbitMqService.PublishAsync(new
+        {
+            CommentId = comment.Id.Value,
+            Action = "Deleted",
+            comment.UserName,
+            DeletedAt = DateTime.UtcNow
+        });
 
         return new DeleteCommentResult(true);
     }

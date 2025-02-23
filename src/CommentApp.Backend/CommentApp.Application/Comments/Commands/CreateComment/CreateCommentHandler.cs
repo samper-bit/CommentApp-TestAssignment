@@ -4,7 +4,8 @@ public class CreateCommentHandler(
     IApplicationDbContext dbContext,
     IHtmlSanitizerService sanitizer,
     IFileService fileService,
-    ICacheService cacheService)
+    ICacheService cacheService,
+    IRabbitMqService rabbitMqService)
     : ICommandHandler<CreateCommentCommand, CreateCommentResult>
 {
     public async Task<CreateCommentResult> Handle(CreateCommentCommand command, CancellationToken cancellationToken)
@@ -27,6 +28,15 @@ public class CreateCommentHandler(
 
         var cacheKey = comment.ParentCommentId == null ? "root-comments" : $"comments:{comment.ParentCommentId}";
         await cacheService.RemoveAsync(cacheKey);
+
+        await rabbitMqService.PublishAsync(new
+        {
+            CommentId = comment.Id.Value,
+            comment.UserName,
+            comment.File,
+            comment.Text,
+            comment.CreatedAt,
+        });
 
         return new CreateCommentResult(comment.Id.Value);
     }
