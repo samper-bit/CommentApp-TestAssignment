@@ -1,35 +1,18 @@
 ﻿namespace CommentApp.Application.Comments.Commands.UpdateComment;
 
-public class UpdateCommentHandler(
-    IApplicationDbContext dbContext,
-    IHtmlSanitizerService sanitizer,
-    IFileService fileService,
-    ICacheService cacheService,
-    IRabbitMqService rabbitMqService)
+public class UpdateCommentHandler
+    (IApplicationDbContext dbContext,
+        IHtmlSanitizerService sanitizer,
+        IFileService fileService,
+        ICacheService cacheService,
+        IRabbitMqService rabbitMqService)
     : ICommandHandler<UpdateCommentCommand, UpdateCommentResult>
 {
     public async Task<UpdateCommentResult> Handle(UpdateCommentCommand command, CancellationToken cancellationToken)
     {
-        var sanitizedRequest = command with
-        {
-            Comment = command.Comment with
-            {
-                Text = sanitizer.SanitizeTextWithTags(command.Comment.Text),
-            }
-        };
+        ValidateComment(command);
 
-        if (sanitizedRequest.Comment.Text != command.Comment.Text)
-            throw new TextIsInvalidException("Invalid HTML tags detected!");
-
-        var commentId = CommentId.Of(command.Comment.Id);
-        var comment =
-            await dbContext.Comments
-                .AsNoTracking()
-                .Include(c => c.File)
-                .FirstOrDefaultAsync(c => c.Id == commentId, cancellationToken);
-
-        if (comment == null)
-            throw new CommentNotFoundException(command.Comment.Id);
+        var comment = await GetCommentFromDbAsync(command, cancellationToken);
 
         await UpdateCommentWithNewValues(comment, command.Comment, command.File);
 
@@ -89,5 +72,34 @@ public class UpdateCommentHandler(
         comment.Update(
             text: commentDto.Text,
             file: fileDomain);
+    }
+
+    private void ValidateComment(UpdateCommentCommand command)
+    {
+        var sanitizedRequest = command with
+        {
+            Comment = command.Comment with
+            {
+                Text = sanitizer.SanitizeTextWithTags(command.Comment.Text),
+            }
+        };
+
+        if (sanitizedRequest.Comment.Text != command.Comment.Text)
+            throw new TextIsInvalidException("Invalid HTML tags detected!");
+    }
+
+    private async Task<Comment> GetCommentFromDbAsync(UpdateCommentCommand command, CancellationToken cancellationToken)
+    {
+        var commentId = CommentId.Of(command.Comment.Id);
+        var comment =
+            await dbContext.Comments
+                .AsNoTracking()
+        .Include(c => c.File)
+                .FirstOrDefaultAsync(c => c.Id == commentId, cancellationToken);
+
+        if (comment == null)
+            throw new CommentNotFoundException(command.Comment.Id);
+
+        return comment;
     }
 }

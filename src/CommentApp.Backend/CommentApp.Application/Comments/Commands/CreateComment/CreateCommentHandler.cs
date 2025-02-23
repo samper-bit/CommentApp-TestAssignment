@@ -1,4 +1,7 @@
-﻿namespace CommentApp.Application.Comments.Commands.CreateComment;
+﻿using System.Net.Mail;
+using System.Text.RegularExpressions;
+
+namespace CommentApp.Application.Comments.Commands.CreateComment;
 
 public class CreateCommentHandler(
     IApplicationDbContext dbContext,
@@ -10,18 +13,7 @@ public class CreateCommentHandler(
 {
     public async Task<CreateCommentResult> Handle(CreateCommentCommand command, CancellationToken cancellationToken)
     {
-        var sanitizedValues = new Dictionary<string, string>
-        {
-            { nameof(command.Comment.UserName), sanitizer.SanitizeString(command.Comment.UserName) },
-            { nameof(command.Comment.Email), sanitizer.SanitizeString(command.Comment.Email) },
-            { nameof(command.Comment.HomePage), sanitizer.SanitizeString(command.Comment.HomePage!) },
-            { nameof(command.Comment.Text), sanitizer.SanitizeTextWithTags(command.Comment.Text) }
-        };
-
-        if (sanitizedValues.Any(kv =>
-                kv.Value != command.Comment.GetType().GetProperty(kv.Key)!.GetValue(command.Comment)?.ToString()))
-            throw new TextIsInvalidException("Invalid HTML tags detected!");
-
+        ValidateComment(command);
         var comment = await CreateNewComment(command.Comment, command.File);
         await dbContext.Comments.AddAsync(comment, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
@@ -71,5 +63,36 @@ public class CreateCommentHandler(
             file: fileDomain);
 
         return newComment;
+    }
+
+    private void ValidateComment(CreateCommentCommand command)
+    {
+        if (!Regex.IsMatch(command.Comment.UserName, @"^[a-zA-Z0-9]+$"))
+            throw new BadRequestException("UserName can only contain Latin letters and numbers.");
+
+        try
+        {
+            var email = new MailAddress(command.Comment.Email);
+        }
+        catch
+        {
+            throw new BadRequestException("Invalid email format.");
+        }
+
+        if (!string.IsNullOrEmpty(command.Comment.HomePage))
+            if (!Uri.IsWellFormedUriString(command.Comment.HomePage, UriKind.Absolute))
+                throw new BadRequestException("Invalid HomePage URL.");
+
+        var sanitizedValues = new Dictionary<string, string>
+        {
+            { nameof(command.Comment.UserName), sanitizer.SanitizeString(command.Comment.UserName) },
+            { nameof(command.Comment.Email), sanitizer.SanitizeString(command.Comment.Email) },
+            { nameof(command.Comment.HomePage), sanitizer.SanitizeString(command.Comment.HomePage!) },
+            { nameof(command.Comment.Text), sanitizer.SanitizeTextWithTags(command.Comment.Text) }
+        };
+
+        if (sanitizedValues.Any(kv =>
+                kv.Value != command.Comment.GetType().GetProperty(kv.Key)!.GetValue(command.Comment)?.ToString()))
+            throw new TextIsInvalidException("Invalid HTML tags detected!");
     }
 }
