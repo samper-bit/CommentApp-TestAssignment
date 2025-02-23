@@ -1,7 +1,10 @@
 ﻿namespace CommentApp.Application.Comments.Commands.CreateComment;
 
-public class CreateCommentHandler
-    (IApplicationDbContext dbContext, IHtmlSanitizerService sanitizer, IFileService fileService)
+public class CreateCommentHandler(
+    IApplicationDbContext dbContext,
+    IHtmlSanitizerService sanitizer,
+    IFileService fileService,
+    ICacheService cacheService)
     : ICommandHandler<CreateCommentCommand, CreateCommentResult>
 {
     public async Task<CreateCommentResult> Handle(CreateCommentCommand command, CancellationToken cancellationToken)
@@ -14,12 +17,16 @@ public class CreateCommentHandler
             { nameof(command.Comment.Text), sanitizer.SanitizeTextWithTags(command.Comment.Text) }
         };
 
-        if (sanitizedValues.Any(kv => kv.Value != command.Comment.GetType().GetProperty(kv.Key)!.GetValue(command.Comment)?.ToString()))
+        if (sanitizedValues.Any(kv =>
+                kv.Value != command.Comment.GetType().GetProperty(kv.Key)!.GetValue(command.Comment)?.ToString()))
             throw new TextIsInvalidException("Invalid HTML tags detected!");
 
         var comment = await CreateNewComment(command.Comment, command.File);
         await dbContext.Comments.AddAsync(comment, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
+
+        var cacheKey = comment.ParentCommentId == null ? "root-comments" : $"comments:{comment.ParentCommentId}";
+        await cacheService.RemoveAsync(cacheKey);
 
         return new CreateCommentResult(comment.Id.Value);
     }
@@ -50,8 +57,8 @@ public class CreateCommentHandler
             email: commentDto.Email,
             homePage: commentDto.HomePage,
             text: commentDto.Text,
-        parentCommentId: parentCommentId,
-        file: fileDomain);
+            parentCommentId: parentCommentId,
+            file: fileDomain);
 
         return newComment;
     }

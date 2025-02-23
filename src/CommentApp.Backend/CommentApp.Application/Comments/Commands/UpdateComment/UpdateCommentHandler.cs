@@ -1,7 +1,10 @@
 ﻿namespace CommentApp.Application.Comments.Commands.UpdateComment;
 
-public class UpdateCommentHandler
-    (IApplicationDbContext dbContext, IHtmlSanitizerService sanitizer, IFileService fileService)
+public class UpdateCommentHandler(
+    IApplicationDbContext dbContext,
+    IHtmlSanitizerService sanitizer,
+    IFileService fileService,
+    ICacheService cacheService)
     : ICommandHandler<UpdateCommentCommand, UpdateCommentResult>
 {
     public async Task<UpdateCommentResult> Handle(UpdateCommentCommand command, CancellationToken cancellationToken)
@@ -31,6 +34,9 @@ public class UpdateCommentHandler
 
         dbContext.Comments.Update(comment);
         await dbContext.SaveChangesAsync(cancellationToken);
+
+        var cacheKey = comment.ParentCommentId == null ? "root-comments" : $"comments:{comment.ParentCommentId}";
+        await cacheService.RemoveAsync(cacheKey);
 
         return new UpdateCommentResult(true);
     }

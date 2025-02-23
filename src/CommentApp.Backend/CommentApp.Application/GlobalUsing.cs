@@ -1,5 +1,6 @@
 ﻿global using MediatR;
 global using FluentValidation;
+global using System.Text.Json;
 global using Microsoft.Extensions.Logging;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.AspNetCore.Http;
@@ -12,6 +13,7 @@ global using CommentApp.Application.Exceptions;
 global using CommentApp.Application.Extensions;
 global using CommentApp.Application.Services.FileService;
 global using CommentApp.Application.Services.HtmlSanitizerService;
+global using CommentApp.Application.Services.CacheService;
 global using CommentApp.Application.SignalR;
 global using CommentApp.Domain.Models;
 global using CommentApp.Domain.Events;

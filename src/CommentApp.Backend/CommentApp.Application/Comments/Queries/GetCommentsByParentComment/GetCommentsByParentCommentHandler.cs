@@ -1,6 +1,8 @@
 ﻿namespace CommentApp.Application.Comments.Queries.GetCommentsByParentComment;
 
-public class GetCommentsByParentCommentHandler(IApplicationDbContext dbContext)
+public class GetCommentsByParentCommentHandler(
+    IApplicationDbContext dbContext,
+    ICacheService cacheService)
     : IQueryHandler<GetCommentsByParentCommentQuery, GetCommentsByParentCommentResult>
 {
     public async Task<GetCommentsByParentCommentResult> Handle(GetCommentsByParentCommentQuery query,
@@ -27,7 +29,7 @@ public class GetCommentsByParentCommentHandler(IApplicationDbContext dbContext)
             .Take(pageSize)
             .AsQueryable();
 
-        return new GetCommentsByParentCommentResult(
+        var result = new GetCommentsByParentCommentResult(
             new PaginatedResult<CommentDto>(
                 pageIndex,
                 pageSize,
@@ -35,5 +37,20 @@ public class GetCommentsByParentCommentHandler(IApplicationDbContext dbContext)
                 sortField,
                 ascending,
                 comments.AsEnumerable().ToCommentDtoList()));
+
+        if (pageIndex == 0 && pageSize == 3 && sortField == "CreatedAt" && ascending == false)
+        {
+            var cacheKey = $"comments:{query.ParentCommentId}";
+
+            var cachedData = await cacheService.GetAsync(cacheKey);
+            if (cachedData != null)
+            {
+                return JsonSerializer.Deserialize<GetCommentsByParentCommentResult>(cachedData)!;
+            }
+
+            await cacheService.SetAsync(cacheKey, JsonSerializer.Serialize(result), TimeSpan.FromMinutes(5));
+        }
+
+        return result;
     }
 }

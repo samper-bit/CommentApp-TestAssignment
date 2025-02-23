@@ -1,7 +1,10 @@
 ﻿namespace CommentApp.Application.Comments.Commands.DeleteComment;
-public class DeleteCommentHandler
-    (IApplicationDbContext dbContext, IFileService fileService)
-    :ICommandHandler<DeleteCommentCommand, DeleteCommentResult>
+
+public class DeleteCommentHandler(
+    IApplicationDbContext dbContext,
+    IFileService fileService,
+    ICacheService cacheService)
+    : ICommandHandler<DeleteCommentCommand, DeleteCommentResult>
 {
     public async Task<DeleteCommentResult> Handle(DeleteCommentCommand command, CancellationToken cancellationToken)
     {
@@ -14,6 +17,9 @@ public class DeleteCommentHandler
         dbContext.Comments.Remove(comment);
         await dbContext.SaveChangesAsync(cancellationToken);
         fileService.DeleteFile(commentId.Value.ToString() ?? string.Empty);
+
+        var cacheKey = comment.ParentCommentId == null ? "root-comments" : $"comments:{comment.ParentCommentId}";
+        await cacheService.RemoveAsync(cacheKey);
 
         return new DeleteCommentResult(true);
     }
