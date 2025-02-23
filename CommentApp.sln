@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CommentApp.Frontend", "Comm
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "commentappfrontend.web", "src\CommentApp.Frontend\commentappfrontend.web\commentappfrontend.web.esproj", "{7B994521-F9D6-473F-BE21-B3F26336ECFA}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{0188844E-40D7-4A60-879F-F77143E49461}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{7B994521-F9D6-473F-BE21-B3F26336ECFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B994521-F9D6-473F-BE21-B3F26336ECFA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7B994521-F9D6-473F-BE21-B3F26336ECFA}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{0188844E-40D7-4A60-879F-F77143E49461}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0188844E-40D7-4A60-879F-F77143E49461}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0188844E-40D7-4A60-879F-F77143E49461}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0188844E-40D7-4A60-879F-F77143E49461}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

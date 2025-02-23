@@ -1,0 +1,23 @@
+services:
+  commentappdb:
+    image: mcr.microsoft.com/mssql/server
+
+  redis:
+    image: redis:latest
+    container_name: redis-container
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+
+  commentapp.api:
+    image: ${DOCKER_REGISTRY-}commentappapi
+    build:
+      context: .
+      dockerfile: src/CommentApp.Backend/CommentApp.API/Dockerfile
+
+  vueapp:
+    container_name: vueapp
+    build:
+      context: ./src/CommentApp.Frontend/commentappfrontend.web/
+      dockerfile: Dockerfile
