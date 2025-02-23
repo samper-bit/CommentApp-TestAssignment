@@ -17,10 +17,10 @@
         <p class="comment-text" v-html="formatCommentText(comment.text)"></p>
         <div v-if="comment.file">
           <img v-if="isImage(comment.file.filePath)"
-               :src="'https://localhost:5050/files/' + comment.file.filePath"
+               :src="`https://localhost:${apiPort}/files/${comment.file.filePath}`"
                class="comment-file" />
           <div v-if="isTextFile(comment.file.filePath)">
-            <a :href="'https://localhost:5050/files/' + comment.file.filePath" target="_blank">Download Text File</a>
+            <a :href="`https://localhost:${apiPort}/files/${comment.file.filePath}`" target="_blank">Download Text File</a>
           </div>
         </div>
       </div>
@@ -40,10 +40,10 @@
 
       <div v-if="comment.file && editedFile">
         <img v-if="isImage(comment.file.filePath)"
-             :src="'https://localhost:5050/files/' + comment.file.filePath"
+             :src="`https://localhost:${apiPort}/files/${comment.file.filePath}`"
              class="comment-file" />
         <div v-if="isTextFile(comment.file.filePath)">
-          <a :href="'https://localhost:5050/files/' + comment.file.filePath" target="_blank">Text File</a>
+          <a :href="`https://localhost:${apiPort}/files/${comment.file.filePath}`" target="_blank">Text File</a>
         </div>
         <div>
           <button @click="removeFile">❌</button>
@@ -153,6 +153,7 @@
       },
     },
   });
+  const apiPort = import.meta.env.VITE_API_PORT;
   const pageIndex = ref(0);
   const showDeleteButton = ref(false);
   const isEditing = ref(false);
@@ -218,7 +219,7 @@
   };
   const fetchCaptcha = async () => {
     try {
-      const response = await fetch("https://localhost:5050/captcha");
+      const response = await fetch(`https://localhost:${apiPort}/captcha`);
       if (response.ok) {
         const data = await response.json();
         captchaId.value = data.captchaId;
@@ -232,7 +233,7 @@
   };
   const verifyCaptcha = async (captchaInput) => {
     try {
-      const response = await fetch("https://localhost:5050/verify-captcha", {
+      const response = await fetch(`https://localhost:${apiPort}/verify-captcha`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ captchaId: captchaId.value, userInput: captchaInput }),
@@ -259,7 +260,7 @@
 
       if (props.comment.file) {
         try {
-          const response = await fetch(`https://localhost:5050/files/${props.comment.file.filePath}`);
+          const response = await fetch(`https://localhost:${apiPort}/files/${props.comment.file.filePath}`);
           if (!response.ok) throw new Error("Failed to fetch file");
 
           const blob = await response.blob();
@@ -301,7 +302,7 @@
         formData.append("file", editedFile.value);
       }
 
-      const response = await fetch("https://localhost:5050/comments", {
+      const response = await fetch(`https://localhost:${apiPort}/comments`, {
         method: "PUT",
         body: formData,
       });
@@ -328,7 +329,7 @@
     }
 
     try {
-      const response = await fetch(`https://localhost:5050/comments/${commentId}`, {
+      const response = await fetch(`https://localhost:${apiPort}/comments/${commentId}`, {
         method: "DELETE",
       });
 
@@ -343,7 +344,7 @@
   };
   const loadReplies = async () => {
     const pageSize = 3;
-    const url = `https://localhost:5050/comments/parent/${props.comment.id}?PageIndex=${pageIndex.value}&PageSize=${pageSize}&SortField=CreatedAt&Ascending=false`;
+    const url = `https://localhost:${apiPort}/comments/parent/${props.comment.id}?PageIndex=${pageIndex.value}&PageSize=${pageSize}&SortField=CreatedAt&Ascending=false`;
 
     try {
       const response = await fetch(url);
@@ -369,7 +370,7 @@
     const pageSize = 3;
     try {
       const response = await fetch(
-        `https://localhost:5050/comments/parent/${props.comment.id}?PageIndex=${pageIndex.value}&PageSize=${pageSize}&SortField=CreatedAt&Ascending=false`
+        `https://localhost:${apiPort}/comments/parent/${props.comment.id}?PageIndex=${pageIndex.value}&PageSize=${pageSize}&SortField=CreatedAt&Ascending=false`
       );
       const data = await response.json();
       loadRepliesVisible.value = data.comments.data.length !== 0;
@@ -440,7 +441,7 @@
     }
 
     try {
-      const response = await fetch("https://localhost:5050/comments", {
+      const response = await fetch(`https://localhost:${apiPort}/comments`, {
         method: "POST",
         body: submissionData,
       });
@@ -507,7 +508,7 @@
     const pageSize = 3;
     try {
       const response = await fetch(
-        `https://localhost:5050/comments/parent/${props.comment.id}?PageIndex=${pageIndex.value}&PageSize=${pageSize}&SortField=CreatedAt&Ascending=false`
+        `https://localhost:${apiPort}/comments/parent/${props.comment.id}?PageIndex=${pageIndex.value}&PageSize=${pageSize}&SortField=CreatedAt&Ascending=false`
       );
       const data = await response.json();
       return data.comments.data.length === 0;
@@ -519,7 +520,7 @@
   const fetchCommentFile = async (filePath) => {
     if (filePath) {
       try {
-        const response = await fetch(`https://localhost:5050/files/${filePath}`);
+        const response = await fetch(`https://localhost:${apiPort}/files/${filePath}`);
         if (!response.ok) throw new Error("Failed to fetch file");
 
         const blob = await response.blob();

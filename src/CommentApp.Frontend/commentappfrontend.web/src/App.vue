@@ -14,6 +14,7 @@
     name: 'App',
     components: { CommentList, CommentItem },
     setup() {
+      const apiPort = import.meta.env.VITE_API_PORT;
       const connection = ref(null);
       const isConnected = ref(false);
 
@@ -21,11 +22,12 @@
 
       const startSignalRConnection = async () => {
         connection.value = new signalR.HubConnectionBuilder()
-          .withUrl("https://localhost:5050/chatHub")
+          .withUrl(`https://localhost:${apiPort}/chatHub`)
           .build();
 
         try {
           await connection.value.start();
+          console.log("✅ SignalR connection established");
           isConnected.value = true;
         } catch (err) {
           console.error("❌ SignalR connection failed:", err);

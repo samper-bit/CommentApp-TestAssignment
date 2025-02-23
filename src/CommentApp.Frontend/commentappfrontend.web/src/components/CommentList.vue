@@ -85,6 +85,7 @@
   export default {
     components: { CommentItem },
     setup() {
+      const apiPort = import.meta.env.VITE_API_PORT;
       const comments = ref([]);
       const pageIndex = ref(0);
       const isAscending = ref(false);
@@ -108,7 +109,7 @@
           if (pageIndex.value === 0) {
             comments.value = [];
           }
-          const response = await fetch(`https://localhost:5050/comments/roots?PageIndex=${pageIndex.value}&PageSize=${25}&SortField=${selectedSortField.value}&Ascending=${isAscending.value}`);
+          const response = await fetch(`https://localhost:${apiPort}/comments/roots?PageIndex=${pageIndex.value}&PageSize=${25}&SortField=${selectedSortField.value}&Ascending=${isAscending.value}`);
           if (response.ok) {
             const data = await response.json();
             comments.value = comments.value.concat(data.comments.data);
@@ -169,7 +170,7 @@
       };
       const fetchCaptcha = async () => {
         try {
-          const response = await fetch('https://localhost:5050/captcha');
+          const response = await fetch(`https://localhost:${apiPort}/captcha`);
           if (response.ok) {
             const data = await response.json();
             captchaId.value = data.captchaId;
@@ -182,7 +183,7 @@
         }
       };
       const verifyCaptcha = async () => {
-        const response = await fetch('https://localhost:5050/verify-captcha', {
+        const response = await fetch(`https://localhost:${apiPort}/verify-captcha`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -242,7 +243,7 @@
         }
 
         try {
-          const response = await fetch('https://localhost:5050/comments', {
+          const response = await fetch(`https://localhost:${apiPort}/comments`, {
             method: 'POST',
             body: formDataToSubmit,
           });
@@ -272,7 +273,7 @@
       };
       const canLoadRootComments = async () => {
         const pageSize = 1;
-        const response = await fetch(`https://localhost:5050/comments/roots?PageIndex=${pageIndex.value + 1}&PageSize=${pageSize}&SortField=${selectedSortField.value}&Ascending=${isAscending.value}`);
+        const response = await fetch(`https://localhost:${apiPort}/comments/roots?PageIndex=${pageIndex.value + 1}&PageSize=${pageSize}&SortField=${selectedSortField.value}&Ascending=${isAscending.value}`);
         const data = await response.json();
         return data.comments.data.length > 0;
       };

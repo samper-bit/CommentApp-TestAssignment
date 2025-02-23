@@ -5,6 +5,6 @@ import plugin from '@vitejs/plugin-vue';
 export default defineConfig({
     plugins: [plugin()],
     server: {
-        port: 5051,
+        port: parseInt(process.env.VITE_VITE_PORT) || 5051,
     }
 })

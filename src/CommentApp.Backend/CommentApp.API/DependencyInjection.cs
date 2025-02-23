@@ -12,7 +12,7 @@ public static class DependencyInjection
         services.AddCors(options =>
         {
             options.AddPolicy("AllowAllOrigins", builder =>
-                builder.WithOrigins("http://localhost:6061", "http://localhost:5051")
+                builder.WithOrigins("http://localhost:5051", "http://localhost:6061")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials());
