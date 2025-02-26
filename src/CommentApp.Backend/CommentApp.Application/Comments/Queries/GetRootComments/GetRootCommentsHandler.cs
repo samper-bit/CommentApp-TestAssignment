@@ -1,4 +1,6 @@
-﻿namespace CommentApp.Application.Comments.Queries.GetRootComments;
+﻿using System.Drawing.Printing;
+
+namespace CommentApp.Application.Comments.Queries.GetRootComments;
 
 public class GetRootCommentsHandler(
     IApplicationDbContext dbContext,
@@ -11,6 +13,14 @@ public class GetRootCommentsHandler(
         var pageSize = query.PaginationRequest.PageSize;
         var sortField = query.PaginationRequest.SortField;
         var ascending = query.PaginationRequest.Ascending;
+        var cacheKey = "root-comments";
+
+        if (IsDefaultPagination(query))
+        {
+            var cachedData = await cacheService.GetAsync(cacheKey);
+            if (cachedData != null)
+                return JsonSerializer.Deserialize<GetRootCommentsResult>(cachedData)!;
+        }
 
         var comments = dbContext.Comments
             .AsNoTracking()
@@ -37,19 +47,14 @@ public class GetRootCommentsHandler(
                 ascending,
                 comments.AsEnumerable().ToCommentDtoList()));
 
-        if (pageIndex == 0 && pageSize == 25 && sortField == "CreatedAt" && ascending == false)
-        {
-            var cacheKey = "root-comments";
-
-            var cachedData = await cacheService.GetAsync(cacheKey);
-            if (cachedData != null)
-            {
-                return JsonSerializer.Deserialize<GetRootCommentsResult>(cachedData)!;
-            }
-
+        if (IsDefaultPagination(query))
             await cacheService.SetAsync(cacheKey, JsonSerializer.Serialize(result), TimeSpan.FromMinutes(5));
-        }
 
         return result;
+    }
+
+    private bool IsDefaultPagination(GetRootCommentsQuery query)
+    {
+        return query.PaginationRequest is { PageIndex: 0, PageSize: 25, SortField: "CreatedAt", Ascending: false };
     }
 }
