@@ -118,10 +118,7 @@
       <CommentItem v-for="child in loadedReplies"
                    :key="child.id"
                    :comment="child"
-                   @delete="reloadReplies"
-                   @reply="$emit('reply', $event)"
-                   @update-comment="reloadReplies"
-                   @load-replies="$emit('load-replies', $event)" />
+                   @delete-comment="reloadReplies" />
     </div>
     <button v-if="loadRepliesVisible !== false" class="show-replies-button" @click="loadReplies">
       Load More Replies
