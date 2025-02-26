@@ -23,6 +23,8 @@ public static class DependencyInjection
             options.UseSqlServer(connectionString);
         });
 
+        services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+        services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
         services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<IFileService, FileService>();
