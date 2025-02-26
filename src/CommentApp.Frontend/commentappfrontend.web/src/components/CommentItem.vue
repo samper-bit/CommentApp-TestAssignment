@@ -130,7 +130,7 @@
 </template>
 
 <script setup>
-  import { inject, onMounted, ref, reactive } from 'vue'
+  import { inject, onMounted, ref, reactive, defineEmits } from 'vue'
 
   const props = defineProps({
     comment: {
@@ -177,6 +177,7 @@
   const captchaImageUrl = ref("");
   const replyTextArea = ref(null);
   const editTextArea = ref(null);
+  const emits = defineEmits(["delete-comment"]);
 
   const formatDate = (date) => {
     const d = new Date(date);
