@@ -23,11 +23,14 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
-      - ConnectionStrings__Database=Server=commentappdb;Database=CommentAppDbTest;User Id=sa;Password=SwN12345678;Encrypt=False;TrustServerCertificate=True
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/home/app/.aspnet/https/CommentApp.API.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password
+      - ConnectionStrings__Database=Server=commentappdb;Database=CommentAppDb;User Id=sa;Password=SwN12345678;Encrypt=False;TrustServerCertificate=True
       - Redis__ConnectionString=redis-container:6379
     depends_on:
       - commentappdb
       - redis
+      - rabbitmq
     ports:
       - "6000:8080"
       - "6060:8081"
