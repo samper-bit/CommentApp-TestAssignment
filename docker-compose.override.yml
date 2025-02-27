@@ -1,0 +1,44 @@
+services:
+  commentappdb:
+    container_name: commentappdb
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=SwN12345678
+    restart: always
+    ports:
+      - "1433:1433"
+ 
+  redis:
+    ports:
+      - "6379:6379"
+    restart: always
+
+  rabbitmq:
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  commentapp.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__Database=Server=commentappdb;Database=CommentAppDbTest;User Id=sa;Password=SwN12345678;Encrypt=False;TrustServerCertificate=True
+      - Redis__ConnectionString=redis-container:6379
+    depends_on:
+      - commentappdb
+      - redis
+    ports:
+      - "6000:8080"
+      - "6060:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+  vueapp:
+    depends_on:
+      - commentapp.api
+    environment:
+      - VITE_API_PORT=6060
+    ports:
+      - "6061:80"
