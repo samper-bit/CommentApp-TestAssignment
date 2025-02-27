@@ -17,7 +17,7 @@ public static class DependencyInjection
         var connectionString = configuration.GetConnectionString("Database");
         var host = IsRunningInDocker() ? "host.docker.internal" : "localhost";
 
-        services.AddDbContext<ApplicationDbContext>(options =>
+
         services.AddDbContext<ApplicationDbContext>((sp, options) =>
         {
             options.AddInterceptors(new AuditableEntityInterceptor());
