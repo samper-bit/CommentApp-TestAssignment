@@ -103,6 +103,7 @@
       const errors = reactive({});
       const captchaId = ref(null);
       const captchaImageUrl = ref("");
+      const hasMoreComments = ref(true);
 
       const fetchComments = async () => {
         try {
@@ -112,6 +113,9 @@
           const response = await fetch(`https://localhost:${apiPort}/comments/roots?PageIndex=${pageIndex.value}&PageSize=${25}&SortField=${selectedSortField.value}&Ascending=${isAscending.value}`);
           if (response.ok) {
             const data = await response.json();
+            if (pageIndex.value === 0) {
+              comments.value = [];
+            }
             comments.value = comments.value.concat(data.comments.data);
           } else {
             console.error("Failed to load comments");
@@ -272,7 +276,7 @@
         fetchComments();
       };
       const canLoadRootComments = async () => {
-        const pageSize = 1;
+        const pageSize = 25;
         const response = await fetch(`https://localhost:${apiPort}/comments/roots?PageIndex=${pageIndex.value + 1}&PageSize=${pageSize}&SortField=${selectedSortField.value}&Ascending=${isAscending.value}`);
         const data = await response.json();
         return data.comments.data.length > 0;
@@ -281,11 +285,20 @@
         const container = event.target;
         const threshold = 50;
 
-        if (container.scrollHeight - container.scrollTop - container.clientHeight <= threshold) {
-          if (!isLoading.value && await canLoadRootComments()) {
+        if (isLoading.value || !hasMoreComments.value) return;
+
+        const isNearBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - threshold;
+
+        if (isNearBottom) {
             isLoading.value = true;
+          try {
+            if (await canLoadRootComments()) {
             pageIndex.value++;
             await fetchComments();
+            } else {
+              hasMoreComments.value = false;
+            }
+          } finally {
             isLoading.value = false;
           }
         }
