@@ -107,9 +107,6 @@
 
       const fetchComments = async () => {
         try {
-          if (pageIndex.value === 0) {
-            comments.value = [];
-          }
           const response = await fetch(`https://localhost:${apiPort}/comments/roots?PageIndex=${pageIndex.value}&PageSize=${25}&SortField=${selectedSortField.value}&Ascending=${isAscending.value}`);
           if (response.ok) {
             const data = await response.json();
@@ -309,7 +306,9 @@
         const waitForConnection = setInterval(() => {
           if (signalRConnection?.value) {
             signalRConnection.value.on("ReceiveNewComment", () => {
+              setTimeout(() => {
               fetchComments();
+              }, 1000);
             });
             clearInterval(waitForConnection);
           }
